@@ -104,10 +104,30 @@ region_list = Federal_District()
 region_list=list(set(region_list))
 subject_list=Federation_subject()
 subject_list=list(set(subject_list))
-City_list = City_list()
-City_list=list(set(City_list))
-#VUZ_list=VUZ_list()
+City_list=list(set(City_list()))
 VUZ_list=list(set(VUZ_list()))
+
+obl_in_Ural=obl_in_Ural()
+
+obl_in_Sev_Kavkaz=obl_in_Sev_Kavkaz()
+
+obl_in_Sev_Zapad=obl_in_Sev_Zapad()
+
+obl_in_Central=obl_in_Central()
+
+obl_in_South=obl_in_South()
+
+obl_in_Privolz=obl_in_Privolz()
+
+obl_in_Sibirian=obl_in_Sibirian()
+
+obl_in_Far_east=obl_in_Far_east
+
+
+
+
+
+
 
 app = QApplication([])
 window = Window()
@@ -147,33 +167,24 @@ form.tableView.setSortingEnabled(True)
 form.tableView.horizontalHeader().setStretchLastSection(True)
 form.tableView.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 form.Tp_nir_redact_widget.setVisible(False)
+form.tableView.setAlternatingRowColors(True)
 
-form.add_confirm_widget.setVisible(False)
-form.redact_confirm_widget.setVisible(False)
 form.tableView.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
 form.stackedWidget.setCurrentWidget(form.page)
 
 def table_show_VUZ():
-    if form.tableView.model() is not None:
-        form.tableView.model().deleteLater()
     form.tableView.setModel(VUZ)
     form.Tp_nir_redact_widget.setVisible(False)
 
 def table_show_Tp_nir():
-    if form.tableView.model() is not None:
-        form.tableView.model().deleteLater()
     form.tableView.setModel(Tp_nir)
     form.Tp_nir_redact_widget.setVisible(True)
 
 def table_show_grntirub():
-    if form.tableView.model() is not None:
-        form.tableView.model().deleteLater()
     form.tableView.setModel(grntirub)
     form.Tp_nir_redact_widget.setVisible(False)
 
 def table_show_Tp_fv():
-    if form.tableView.model() is not None:
-        form.tableView.model().deleteLater()
     form.tableView.setModel(Tp_fv)
     form.Tp_nir_redact_widget.setVisible(False)
 
@@ -212,8 +223,11 @@ def close_redact_confirm():
     form.redact_confirm_widget.setVisible(False)
     form.stackedWidget.setCurrentWidget(form.page)
 
-def hard_filter():
+def complex_filter():
     form.stackedWidget.setCurrentWidget(form.page_complex_filter_widget)
+
+def complex_filter_close():
+    form.stackedWidget.setCurrentWidget(form.page)
 
 
 Tp_nir_redact_VUZcode_textEdit = QTextEdit()
@@ -285,12 +299,21 @@ def save_data():
         form.tableView.show()
 
         # Скрываем окно подтверждения
-        form.add_confirm_widget.setVisible(False)
         form.stackedWidget.setCurrentWidget(form.page)
 
         QMessageBox.information(None, "Успех", "Данные успешно сохранены.")
     except Exception as e:
         show_error_message(f"Ошибка при сохранении данных: {e}")
+    form.Tp_nir_add_grntiNumber_textEdit.clear()
+    form.Tp_nir_add_grntiHead_textEdit.clear()
+    form.Tp_nir_add_grntiCode_textEdit.clear()
+    form.Tp_nir_add_grntiName_textEdit.clear()
+    form.Tp_nir_add_grntiHeadPost_textEdit.clear()
+    form.Tp_nir_add_plannedFinancing_textEdit.clear()
+    form.tableView.sortByColumn(0, Qt.SortOrder.AscendingOrder)
+    form.tableView.setCurrentIndex(form.model)
+
+
 
 def edit_row(tableView, edit_button, Tp_nir_redact_VUZcode_textEdit, Tp_nir_redact_VUZshortName_textEdit,
              Tp_nir_add_grntiNumber_textEdit_2, Tp_nir_add_grntiNature_comboBox_2,
@@ -340,7 +363,7 @@ form.redact_widget_open_pushButton.clicked.connect(lambda: edit_row(
     Tp_nir_redact_VUZcode_textEdit=form.Tp_nir_redact_VUZcode_textEdit,
     Tp_nir_redact_VUZshortName_textEdit=form.Tp_nir_redact_VUZshortName_textEdit,
     Tp_nir_add_grntiNumber_textEdit_2=form.Tp_nir_add_grntiNumber_textEdit_2,
-    Tp_nir_add_grntiNature_comboBox_2=form.Tp_nir_add_grntiNature_comboBox_2,
+    Tp_nir_add_grntiNature_comboBox_2=form.Tp_nir_redact_grntiNature_comboBox,
     Tp_nir_add_grntiHead_textEdit_2=form.Tp_nir_add_grntiHead_textEdit_2,
     Tp_nir_add_grntiCode_textEdit_2=form.Tp_nir_add_grntiCode_textEdit_2,
     Tp_nir_add_grntiName_textEdit_2=form.Tp_nir_add_grntiName_textEdit_2,
@@ -369,7 +392,7 @@ def fill_edit_menu(data, Tp_nir_redact_VUZcode_textEdit, Tp_nir_redact_VUZshortN
 
 
 
-form.save_add_confirm_pushButton.clicked.connect(save_data)
+
 form.action_show_VUZ.triggered.connect(table_show_VUZ)
 form.action_show_Tp_nir.triggered.connect(table_show_Tp_nir)
 form.action_show_grntirub.triggered.connect(table_show_grntirub)
@@ -378,17 +401,25 @@ form.Select_rows_action.triggered.connect(selectRows)
 form.Select_columns_action.triggered.connect(selectColums)
 form.Select_items_action.triggered.connect(selectItems)
 form.add_widget_open_pushButton.clicked.connect(add_widget)
+
+
+
 form.redact_widget_open_pushButton.clicked.connect(redact_widget)
+form.Tp_nir_redact_grntiNature_comboBox.addItems(['прикладное исследование (П)','экспериментальная разработка (Р)','фундаментальное исследование (Ф)'])
+
+
+
 form.add_widget_close_pushButton.clicked.connect(close_add_widget)
 form.redact_widget_close_pushButton.clicked.connect(close_redact_widget)
-form.Tp_nir_add_widget_saveButton.clicked.connect(save_add_widget)
-form.redact_widget_saveButton.clicked.connect(save_redact_widget)
-form.close_add_confirm_pushButton.clicked.connect(close_add_confirm)
-form.close_redact_confirm_pushButton.clicked.connect(close_redact_confirm)
+form.Tp_nir_add_widget_saveButton.clicked.connect(save_data)
+
+
+#form.redact_widget_saveButton.clicked.connect(save_redact_widget)
+
 form.Tp_nir_add_grntiNature_comboBox.addItems(['прикладное исследование (П)','экспериментальная разработка (Р)','фундаментальное исследование (Ф)'])
 form.Tp_nir_add_VUZcode_name_comboBox.addItems([str(i) + ' ' + var for var, i in zip(name_list, code_list)])
 form.Tp_nir_add_VUZcode_name_comboBox.setEditable(True)
-form.widget_hard_filter_pushButton.clicked.connect(hard_filter)
+form.widget_hard_filter_pushButton.clicked.connect(complex_filter)
 form.Federal_District_comboBox.addItems(region_list)
 form.Federal_District_comboBox.setEditable(True)
 form.Federation_subject_comboBox.addItems(subject_list)
@@ -397,13 +428,13 @@ form.City_comboBox.addItems(City_list)
 form.City_comboBox.setEditable(True)
 form.VUZ_comboBox.addItems(VUZ_list)
 form.VUZ_comboBox.setEditable(True)
-
+form.close_complex_filter_pushButton.clicked.connect(complex_filter_close)
 
 
 form.widget_del_pushButton.clicked.connect(lambda: delete_string_in_table(form.tableView, form.tableView.model()))
 form.widget_add_grnti_cod_pushbutton.clicked.connect(lambda: input_cod_grnti(form.tableView))
 form.widget_filter_grnti_cod_pushButton.clicked.connect(filter_by_cod_grnti)
-form.widget_hard_filter_pushButton.clicked.connect(hard_filter)
 
+#form.widget_hard_filter_pushButton.clicked.connect(hard_filter)
 window.show()
 app.exec()
