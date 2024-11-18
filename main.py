@@ -695,7 +695,7 @@ class MainWindow(QMainWindow):
     def filter(self):
         self.show_menu(self.Tp_nir_add_row_menu, 3)
         self.hide_buttons()
-
+        self.grnti_txt.addItems(grnti_to_cmb())
         self.populate_initial_comboboxes()
         self.setup_combobox_signals()
         # Подключение сигналов для фильтрации
@@ -967,6 +967,9 @@ class MainWindow(QMainWindow):
         self.region_cmb.setCurrentIndex(0)
         self.city_cmb.setCurrentIndex(0)
         self.obl_cmb.setCurrentIndex(0)  # Устанавливаем "Выберите..." как выбранное значение
+
+    def full_grnti_in_filter_cmb(self):
+        self.grnti_txt.addItems(grnti_to_cmb())
 
 
 if __name__ == '__main__':
