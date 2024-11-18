@@ -12,6 +12,7 @@ import sqlite3
 import re
 from db import *
 
+
 class CustomTextEdit(QTextEdit):
     def keyPressEvent(self, event: QKeyEvent):
         current_text = self.toPlainText()
@@ -164,17 +165,16 @@ class MainWindow(QMainWindow):
 
         self.stackedWidget.setCurrentIndex(0)
 
+       # self.Tp_nir_redact.setVisible(False)
+
 
         # Подключение действий для отображения таблиц
-        self.action_show_VUZ.triggered.connect(lambda: self.table_show('VUZ'))
-        self.action_show_Tp_nir.triggered.connect(lambda: self.table_show('Tp_nir'))
-        self.action_show_grntirub.triggered.connect(lambda: self.table_show('grntirub'))
-        self.action_show_Tp_fv.triggered.connect(lambda: self.table_show('Tp_fv'))
+        self.action_show_VUZ.triggered.connect(self.open_VUZ)
+        self.action_show_Tp_nir.triggered.connect(self.open_Tp_nir)
+        self.action_show_grntirub.triggered.connect(self.open_grntirub)
+        self.action_show_Tp_fv.triggered.connect(self.open_Tp_fv)
         self.tableView_2.setModel(self.models['Tp_nir'])  # New
 
-
-        self.po_rubrikam.triggered.connect(lambda: self.table_show('GRNTI_Summary'))
-        self.po_character.triggered.connect(lambda: self.table_show('NIR_Character_Summary'))
 
         # Кнопки для добавления
         self.Tp_nir_redact_add_row_btn.clicked.connect(self.open_add_row_menu)
@@ -204,6 +204,7 @@ class MainWindow(QMainWindow):
         #Анализ
         self.save_filter_btn.clicked.connect(self.save_filter_conditions)  # Подключаем кнопку сохранения фильтров
         self.apply_filter_btn.clicked.connect(self.apply_saved_filters)
+
         self.po_VUZ.triggered.connect(self.open_analysis_menu_po_VUZ)
         self.po_rubrikam.triggered.connect(self.open_analysis_menu_po_rubrikam)
         self.po_character.triggered.connect(self.open_analysis_menu_po_character)
@@ -211,6 +212,26 @@ class MainWindow(QMainWindow):
     def table_show(self, table_name):
         """Отображение таблицы."""
         self.tableView.setModel(self.models[table_name])
+
+    def open_VUZ(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.Tp_nir_redact.setVisible(False)
+        self.table_show('VUZ')
+
+    def open_Tp_nir(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.Tp_nir_redact.setVisible(True)
+        self.table_show('Tp_nir')
+
+    def open_Tp_fv(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.Tp_nir_redact.setVisible(False)
+        self.table_show('Tp_fv')
+
+    def open_grntirub(self):
+        self.stackedWidget.setCurrentIndex(0)
+        self.Tp_nir_redact.setVisible(False)
+        self.table_show('grntirub')
 
     def table_show_3(self, table_name):
         """Отображение таблицы."""
@@ -687,15 +708,10 @@ class MainWindow(QMainWindow):
         self.tableView.show()
 
 
-
-
-
-
-
     def filter(self):
         self.show_menu(self.Tp_nir_add_row_menu, 3)
         self.hide_buttons()
-        self.grnti_txt.addItems(grnti_to_cmb())
+        self.grnticode_txt.addItems(grnti_to_cmb())
         self.populate_initial_comboboxes()
         self.setup_combobox_signals()
         # Подключение сигналов для фильтрации
@@ -967,9 +983,6 @@ class MainWindow(QMainWindow):
         self.region_cmb.setCurrentIndex(0)
         self.city_cmb.setCurrentIndex(0)
         self.obl_cmb.setCurrentIndex(0)  # Устанавливаем "Выберите..." как выбранное значение
-
-    def full_grnti_in_filter_cmb(self):
-        self.grnti_txt.addItems(grnti_to_cmb())
 
 
 if __name__ == '__main__':
