@@ -892,7 +892,7 @@
         <string>Сохранение условий фильтрации</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="grnti_txt">
+      <widget class="QComboBox" name="grnticode_txt">
        <property name="geometry">
         <rect>
          <x>12</x>
