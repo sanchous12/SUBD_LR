@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1539</width>
-    <height>834</height>
+    <width>1552</width>
+    <height>902</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -726,7 +726,7 @@
         <string>Регион</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="region_cmb">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -772,7 +772,7 @@
         <string>Область</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_3">
+      <widget class="QComboBox" name="city_cmb">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -782,7 +782,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_4">
+      <widget class="QComboBox" name="obl_cmb">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -792,7 +792,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox_5">
+      <widget class="QComboBox" name="vuz_cmb">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -820,39 +820,11 @@
         <string>ВУЗ</string>
        </property>
       </widget>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>221</width>
-         <height>31</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>320</y>
-         <width>93</width>
-         <height>28</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>OK</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="Tp_nir_redact_filters_close_btn">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>320</y>
+         <x>160</x>
+         <y>300</y>
          <width>93</width>
          <height>28</height>
         </rect>
@@ -866,11 +838,11 @@
         <string>Отмена</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="cancel_filtration_btn">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>370</y>
+         <x>0</x>
+         <y>300</y>
          <width>141</width>
          <height>28</height>
         </rect>
@@ -881,9 +853,85 @@
         </font>
        </property>
        <property name="text">
-        <string>Сброс фильтра</string>
+        <string>Сброс фильтров</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="filter_by_grnticode_btn">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>70</y>
+         <width>191</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Фильтрация по Коду ГРНТИ</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save_filter_btn">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>350</y>
+         <width>251</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Сохранение условий фильтрации</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="grnti_txt">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>21</y>
+         <width>221</width>
+         <height>31</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_analysis">
+     <widget class="QPushButton" name="apply_filter_btn">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>620</y>
+        <width>1041</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Применение условий фильтрации</string>
+      </property>
+     </widget>
+     <widget class="QTableView" name="tableView_3">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>11</y>
+        <width>1491</width>
+        <height>601</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -977,7 +1025,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1539</width>
+     <width>1552</width>
      <height>26</height>
     </rect>
    </property>
@@ -991,21 +1039,18 @@
     <addaction name="action_show_VUZ"/>
     <addaction name="action_show_grntirub"/>
    </widget>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>Работа с бд</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Анализ</string>
     </property>
-    <addaction name="action_9"/>
-    <addaction name="action_10"/>
+    <addaction name="po_VUZ"/>
+    <addaction name="separator"/>
+    <addaction name="po_rubrikam"/>
+    <addaction name="separator"/>
+    <addaction name="po_character"/>
    </widget>
    <addaction name="menu_1"/>
    <addaction name="menu_2"/>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_show_VUZ">
@@ -1043,9 +1088,9 @@
     <string>Удаление запси</string>
    </property>
   </action>
-  <action name="action_9">
+  <action name="po_VUZ">
    <property name="text">
-    <string>Формирование документов</string>
+    <string>По ВУЗу</string>
    </property>
   </action>
   <action name="action_10">
@@ -1086,6 +1131,16 @@
   <action name="action_show_Tp_fv">
    <property name="text">
     <string>Финансирование</string>
+   </property>
+  </action>
+  <action name="po_rubrikam">
+   <property name="text">
+    <string>По рубрикам ГРНТИ</string>
+   </property>
+  </action>
+  <action name="po_character">
+   <property name="text">
+    <string>По характеру НИР</string>
    </property>
   </action>
  </widget>
