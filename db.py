@@ -5,24 +5,35 @@ from PyQt6.QtSql import *
 from PyQt6.QtWidgets import QMessageBox, QTableWidgetItem, QTextEdit
 from PyQt6.QtCore import Qt
 
+
 db_name = 'databases//database.db'
 
+
 def create_database():
+    """Создание базы данных."""
     if os.path.exists(db_name):
-        os.remove(db_name)
+        try:
+            os.remove(db_name)
+        except PermissionError:
+            print("Ошибка: файл занят другим процессом. Попробуйте закрыть все соединения с базой данных.")
+            return  # Выход из функции, если файл занят
     conn = sqlite3.connect(db_name)
     conn.commit()
     conn.close()
 
+
 def connect_db(db_name_name):
+    """Подключение к базе данных."""
     db = QSqlDatabase.addDatabase('QSQLITE')
     db.setDatabaseName(db_name_name)
     if not db.open():
-        print('не удалось подключиться к базе')
+        print('Не удалось подключиться к базе')
         return False
     return db
 
+
 def create_table_tp_nir():
+    """Создание таблицы Tp_nir."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('DROP TABLE IF EXISTS Tp_nir')
@@ -30,9 +41,9 @@ def create_table_tp_nir():
     CREATE TABLE IF NOT EXISTS Tp_nir (
     "Код" INTEGER,
     "Номер" INTEGER,
-    "Характер" TEXT ,
+    "Характер" TEXT,
     "Сокращенное_имя" TEXT DEFAULT NULL,
-    "Руководитель" TEXT ,
+    "Руководитель" TEXT,
     "Коды_ГРНТИ" TEXT,
     "НИР" TEXT,
     "Должность" TEXT,
@@ -45,15 +56,16 @@ def create_table_tp_nir():
     conn.close()
 
 def create_table_vuz():
+    """Создание таблицы VUZ."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('DROP TABLE IF EXISTS VUZ')
     c.execute('''
        CREATE TABLE IF NOT EXISTS VUZ (
        "Код" INTEGER,
-       "Наименование" , 
-        "Полное_имя", 
-        "Сокращенное_имя",
+       "Наименование" TEXT, 
+       "Полное_имя" TEXT, 
+       "Сокращенное_имя" TEXT,
        "Регион" TEXT,
        "Город" TEXT,
        "Статус" TEXT,
@@ -64,11 +76,12 @@ def create_table_vuz():
        PRIMARY KEY ("Код")
        )
        ''')
-
     conn.commit()
     conn.close()
 
+
 def create_table_grntirub():
+    """Создание таблицы grntir ub."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('DROP TABLE IF EXISTS grntirub')
@@ -80,7 +93,9 @@ def create_table_grntirub():
     conn.commit()
     conn.close()
 
+
 def create_table_tp_fv():
+    """Создание таблицы Tp_fv."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('DROP TABLE IF EXISTS Tp_fv')
@@ -96,7 +111,55 @@ def create_table_tp_fv():
     conn.commit()
     conn.close()
 
+def create_table_vuz_summary():
+    """Создание таблицы VUZ_Summary."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute('DROP TABLE IF EXISTS VUZ_Summary')
+    c.execute('''
+       CREATE TABLE IF NOT EXISTS VUZ_Summary (
+       "Сокращенное_имя" TEXT,
+       "Сумма_планового_финансирования" INTEGER,
+       "Сумма_количества_НИР" INTEGER,
+       "Сумма_фактического_финансирования" INTEGER
+       )
+       ''')
+    conn.commit()
+    conn.close()
+
+def create_table_grnti_summary():
+    """Создание таблицы GRNTI_Summary."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute('DROP TABLE IF EXISTS GRNTI_Summary')
+    c.execute('''
+       CREATE TABLE IF NOT EXISTS GRNTI_Summary (
+       "Код_рубрики" TEXT,
+       "Название_рубрики" TEXT,
+       "Количество_НИР" INTEGER,
+       "Сумма_планового_финансирования" INTEGER
+       )
+       ''')
+    conn.commit()
+    conn.close()
+
+def create_table_nir_character_summary():
+    """Создание таблицы NIR_Character_Summary."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute('DROP TABLE IF EXISTS NIR_Character_Summary')
+    c.execute('''
+       CREATE TABLE IF NOT EXISTS NIR_Character_Summary (
+       "Характер" TEXT,
+       "Количество_НИР" INTEGER,
+       "Сумма_планового_финансирования" INTEGER
+       )
+       ''')
+    conn.commit()
+    conn.close()
+
 def import_table_tp_nir_from_csv():
+    """Импорт таблицы Tp_nir из CSV."""
     csv_file = 'databases//Tp_nir.csv'
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
@@ -121,7 +184,9 @@ def import_table_tp_nir_from_csv():
     conn.commit()
     conn.close()
 
+
 def import_table_vuz_from_csv():
+    """Импорт таблицы VUZ из CSV."""
     csv_file = 'databases//VUZ.csv'
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
@@ -145,7 +210,9 @@ def import_table_vuz_from_csv():
     conn.commit()
     conn.close()
 
+
 def import_table_grntirub_from_csv():
+    """Импорт таблицы grntirub из CSV."""
     csv_file = 'databases//grntirub.csv'
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
@@ -167,7 +234,9 @@ def import_table_grntirub_from_csv():
     conn.commit()
     conn.close()
 
+
 def import_table_tp_fv_from_csv():
+    """Импорт таблицы Tp_fv из CSV."""
     csv_file = 'databases//Tp_fv.csv'
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
@@ -192,6 +261,7 @@ def import_table_tp_fv_from_csv():
 
 
 def make_correct_cod_grnti():
+    """Создание правильного кода ГРНТИ."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('''SELECT 
@@ -211,7 +281,9 @@ def make_correct_cod_grnti():
     conn.commit()
     conn.close()
 
+
 def input_short_name_from_vuz():
+    """Ввод сокращенного имени из VUZ."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('''SELECT VUZ."Код",
@@ -226,7 +298,9 @@ def input_short_name_from_vuz():
     conn.commit()
     conn.close()
 
+
 def fill_tp_fv():
+    """Заполнение таблицы Tp_fv."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     c.execute('''INSERT INTO Tp_fv ("Код", "Сокращенное_имя", "Плановое_финансирование", "Количество_НИР")
@@ -244,15 +318,110 @@ def fill_tp_fv():
     conn.commit()
     conn.close()
 
+def fill_vuz_summary():
+    """Заполнение таблицы VUZ_Summary только для вузов, которые есть в Tp_nir."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
+    c.execute('DELETE FROM VUZ_Summary')
+
+    query = '''
+        INSERT INTO VUZ_Summary ("Сокращенное_имя", "Сумма_планового_финансирования", "Сумма_количества_НИР", "Сумма_фактического_финансирования")
+        SELECT 
+            VUZ."Сокращенное_имя",
+            SUM(Tp_nir."Плановое_финансирование") AS "Сумма_планового_финансирования",
+            COUNT(Tp_nir."Номер") AS "Сумма_количества_НИР",
+            SUM(Tp_fv."Фактическое_финансирование") AS "Сумма_фактического_финансирования"
+        FROM VUZ
+        LEFT JOIN Tp_nir ON VUZ."Код" = Tp_nir."Код"
+        LEFT JOIN Tp_fv ON VUZ."Код" = Tp_fv."Код"
+        WHERE Tp_nir."Код" IS NOT NULL 
+        GROUP BY VUZ."Сокращенное_имя"
+    '''
+    c.execute(query)
+
+    # Добавляем итоговую строку
+    c.execute('''
+        INSERT INTO VUZ_Summary ("Сокращенное_имя", "Сумма_планового_финансирования", "Сумма_количества_НИР", "Сумма_фактического_финансирования")
+        SELECT 
+            'ИТОГО',
+            SUM("Сумма_планового_финансирования"),
+            SUM("Сумма_количества_НИР"),
+            SUM("Сумма_фактического_финансирования")
+        FROM VUZ_Summary
+    ''')
+
+    conn.commit()
+    conn.close()
+
+def fill_grnti_summary():
+    """Заполнение таблицы GRNTI_Summary."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
+    c.execute('DELETE FROM GRNTI_Summary')  # Очистка таблицы перед заполнением
+
+    query = '''
+        INSERT INTO GRNTI_Summary ("Код_рубрики", "Название_рубрики", "Количество_НИР", "Сумма_планового_финансирования")
+        SELECT 
+            substr(Tp_nir."Коды_ГРНТИ", 1, 2) AS "Код_рубрики",  -- Первые две цифры из Коды_ГРНТИ
+            grntirub."Рубрика" AS "Название_рубрики",
+            COUNT(Tp_nir."Номер") AS "Количество_НИР",  -- Количество НИР по рубрике
+            SUM(Tp_nir."Плановое_финансирование") AS "Сумма_планового_финансирования"  -- Сумма планового финансирования
+        FROM Tp_nir
+        INNER JOIN grntirub ON substr(Tp_nir."Коды_ГРНТИ", 1, 2) = grntirub."Код_рубрики"
+        GROUP BY 
+            substr(Tp_nir."Коды_ГРНТИ", 1, 2),
+            grntirub."Рубрика"
+    '''
+    c.execute(query)
+
+    conn.commit()
+    conn.close()
+
+def fill_nir_character_summary():
+    """Заполнение таблицы NIR_Character_Summary."""
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+
+    c.execute('DELETE FROM NIR_Character_Summary')  # Очистка таблицы перед заполнением
+
+    query = '''
+        INSERT INTO NIR_Character_Summary ("Характер", "Количество_НИР", "Сумма_планового_финансирования")
+        SELECT 
+            "Характер",
+            COUNT("Номер") AS "Количество_НИР",
+            SUM("Плановое_финансирование") AS "Сумма_планового_финансирования"
+        FROM Tp_nir
+        GROUP BY "Характер"
+    '''
+    c.execute(query)
+
+    # Добавляем итоговую строку
+    c.execute('''
+        INSERT INTO NIR_Character_Summary ("Характер", "Количество_НИР", "Сумма_планового_финансирования")
+        SELECT 
+            'ИТОГО',
+            SUM("Количество_НИР"),
+            SUM("Сумма_планового_финансирования")
+        FROM NIR_Character_Summary
+    ''')
+
+    conn.commit()
+    conn.close()
+
 def connect_db(db_name):
+    """Подключение к базе данных."""
     db = QSqlDatabase.addDatabase('QSQLITE')
     db.setDatabaseName(db_name)
     if not db.open():
-        print('не удалось подключиться к базе')
+        print('Не удалось подключиться к базе')
         return False
     return db
 
+
 def get_column_values_from_table(column_name):
+    """Получение значений столбца из таблицы."""
     try:
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
@@ -267,8 +436,9 @@ def get_column_values_from_table(column_name):
             conn.close()
     return column
 
+
 def get_column_name_with_linked_value(value):
-    '''Получение имени столбца выбранного значения из GUI'''
+    """Получение имени столбца с выбранным значением."""
     try:
         conn = sqlite3.connect(db_name)
         c = conn.cursor()
@@ -277,20 +447,22 @@ def get_column_name_with_linked_value(value):
         c.execute("PRAGMA table_info(VUZ)")
         rows2 = c.fetchall()
         rows = rows1 + rows2
+
         for row in rows:
-            query = "SELECT ? FROM Tp_nir INNER JOIN VUZ ON VUZ.Код = Tp_nir.Код WHERE ? = ?"
-            c.execute(query, (row[1], row[1], value))
+            column_name = row[1]  # Имя столбца
+            query = f"SELECT {column_name} FROM Tp_nir INNER JOIN VUZ ON VUZ.Код = Tp_nir.Код WHERE {column_name} = ?"
+            c.execute(query, (value,))
             if c.fetchone():
-                return row[1]
+                return column_name
     except sqlite3.Error as e:
         print(f"Error: {e}")
         return None
     finally:
         if conn:
             conn.close()
-    return None
 
-def hard_filter(selected_values):
+def hard_filter(self, selected_values):
+    """Фильтрация по выбранным значениям."""
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
 
@@ -302,7 +474,8 @@ def hard_filter(selected_values):
             query = '''
                 SELECT *
                 FROM Tp_fv
-                INNER JOIN VUZ ON VUZ."Код" = Tp_nir."Код"
+                INNER JOIN VUZ ON VUZ."Код" = Tp_fv."Код"
+                INNER JOIN Tp_nir ON Tp_nir."Код" = Tp_fv."Код"  -- Добавлено
                 WHERE {} = ?
             '''.format(column_name)
         else:
@@ -318,14 +491,15 @@ def hard_filter(selected_values):
 
         model = QSqlQueryModel()
         model.setQuery(c)
-        tableView.setModel(model)
+        self.tableView.setModel(model)  # Используйте self.tableView
 
-        previous_results = c.fetchall()
+        previous_results = "SELECT * FROM ({})".format(model.query().lastQuery())  # Сохраните запрос для следующего цикла
 
     conn.close()
 
+
 def delete_string_in_table(table_view, table_model):
-    '''Удаление всей строки таблицы'''
+    """Удаление строки из таблицы."""
     try:
         selection_model = table_view.selectionModel()
         selected_rows = selection_model.selectedRows()
@@ -341,13 +515,49 @@ def delete_string_in_table(table_view, table_model):
         print(f"An error occurred: {e}")
     return False
 
+def grnti_to_cmb():
+    # Создаем или открываем базу данных
+    connection = sqlite3.connect('databases//database.db')
+
+    # Создаем курсор
+    cursor = connection.cursor()
+
+    # Извлекаем данные из столбца 'name'
+    cursor.execute("SELECT Код_рубрики, Рубрика FROM grntirub")
+    codes = cursor.fetchall()  # Получаем все записи в виде списка кортежей
+
+    # Записываем имена в переменную
+    codes = [code[0] for code in codes]  # Извлекаем первый элемент каждого кортежа
+   # codes=list(grnti_cod_list)
+
+    # Извлекаем данные из столбца 'name'
+    cursor.execute("SELECT Рубрика FROM grntirub")
+    names = cursor.fetchall()  # Получаем все записи в виде списка кортежей
+
+    # Записываем имена в переменную
+    cod_names = [name[0] for name in names]  # Извлекаем первый элемент каждого кортежа
+   # cod_names=list(grnti_name_list)
+    # Закрываем соединение
+    connection.close()
+
+    grnti_to_cmb=[f'{cod} - {name}' for cod, name in zip(codes,cod_names)]
+  #  print(grnti_to_cmb)
+    return(grnti_to_cmb)
+
+
+
+
 def prepare_tables():
+    """Подготовка таблиц."""
     create_database()
 
     create_table_tp_nir()
     create_table_vuz()
     create_table_grntirub()
     create_table_tp_fv()
+    create_table_vuz_summary()
+    create_table_grnti_summary()
+    create_table_nir_character_summary()
 
     import_table_tp_nir_from_csv()
     import_table_vuz_from_csv()
@@ -358,64 +568,9 @@ def prepare_tables():
     input_short_name_from_vuz()
     fill_tp_fv()
 
-def codes():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Код FROM VUZ")
-    codes = cursor.fetchall()
-    code_list=[code[0] for code in codes]
-    #print(code_list)
-    conn.close()
-    return code_list
-
-def column():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Сокращенное_имя FROM VUZ")
-    names = cursor.fetchall()
-    name_list=[name[0] for name in names]
-    #print(name_list)
-    conn.close()
-    return name_list
-
-def Federal_District():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Регион FROM VUZ")
-    names = cursor.fetchall()
-    region_list = [name[0] for name in names]
-    # print(name_list)
-    conn.close()
-    return region_list
-
-def Federation_subject():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Область FROM VUZ")
-    names = cursor.fetchall()
-    subject_list = [name[0] for name in names]
-    # print(name_list)
-    conn.close()
-    return subject_list
+    fill_vuz_summary()
+    fill_grnti_summary()
+    fill_nir_character_summary()
 
 
-def City_list():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Город FROM VUZ")
-    names = cursor.fetchall()
-    city_list = [name[0] for name in names]
-    # print(name_list)
-    conn.close()
-    return city_list
-
-
-def VUZ_list():
-    conn = sqlite3.connect('databases//database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT Сокращенное_имя FROM VUZ")
-    names = cursor.fetchall()
-    VUZ_list=[name[0] for name in names]
-    #print(name_list)
-    conn.close()
-    return VUZ_list
+prepare_tables()
