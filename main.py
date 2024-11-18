@@ -165,7 +165,7 @@ class MainWindow(QMainWindow):
 
         self.stackedWidget.setCurrentIndex(0)
 
-       # self.Tp_nir_redact.setVisible(False)
+        self.Tp_nir_redact.setVisible(False)
 
 
         # Подключение действий для отображения таблиц
@@ -239,14 +239,17 @@ class MainWindow(QMainWindow):
 
     def open_analysis_menu_po_VUZ(self):
         self.stackedWidget.setCurrentIndex(4)
+        self.Tp_nir_redact.setVisible(False)
         self.table_show_3('VUZ_Summary')
 
     def open_analysis_menu_po_rubrikam(self):
         self.stackedWidget.setCurrentIndex(4)
+        self.Tp_nir_redact.setVisible(False)
         self.table_show_3('GRNTI_Summary')
 
     def open_analysis_menu_po_character(self):
         self.stackedWidget.setCurrentIndex(4)
+        self.Tp_nir_redact.setVisible(False)
         self.table_show_3('NIR_Character_Summary')
 
     def save_filter_conditions(self):
@@ -617,7 +620,12 @@ class MainWindow(QMainWindow):
 
     def filter_by_cod_grnti(self):
         """Фильтрация по коду ГРНТИ."""
-        str_cod = self.grnticode_txt.toPlainText().strip()
+        str_cod = str(self.grnticode_txt.currentText()).split(' ', 1)
+      #  str_cod=str(str_cod).split(' ', 1)
+        str_cod = str_cod[0]
+        if int(str_cod) < 10:
+            str_cod = '0' + str_cod
+        print(str_cod)
 
         # Регулярное выражение для проверки, что строка состоит из цифр и точек
         if not str_cod or not re.match(r'^[\d.]+$', str_cod):
@@ -715,7 +723,7 @@ class MainWindow(QMainWindow):
         self.populate_initial_comboboxes()
         self.setup_combobox_signals()
         # Подключение сигналов для фильтрации
-        self.grnticode_txt = self.findChild(QTextEdit, 'grnticode_txt')
+        self.grnticode_txt = self.findChild(QComboBox, 'grnticode_txt')
         self.filter_by_grnticode_btn.clicked.connect(self.filter_by_cod_grnti)
         self.cancel_filtration_btn.clicked.connect(self.on_reset_filter)
         self.Tp_nir_redact_filters_close_btn.clicked.connect(self.on_Tp_nir_redact_filters_close_btn_clicked)
